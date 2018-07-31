@@ -9,6 +9,9 @@
 import Foundation
 import StoreKit
 
+
+typealias CompletionHandler = (_ success: Bool) -> ()
+
 class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
     let IAP_REMOVE_ADS = "com.email.daily.dose.remove.ads"
@@ -17,6 +20,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransaction
     
     var productsRequest: SKProductsRequest!
     var products = [SKProduct]()
+    var transactionComplete: CompletionHandler?
     
     // the itunes store will not be able to test your products if there is nothing to fetch them with... thus the function that follows exmplifies what is needed to work with a simple product request.
     
@@ -27,15 +31,16 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransaction
         productsRequest.start()
     }
     
-    func purchaseRemoveAds(){
-        
+    func purchaseRemoveAds(onComplete: @escaping CompletionHandler){
         if SKPaymentQueue.canMakePayments() && products.count > 0 {
+            transactionComplete = onComplete
             let removeAdsProduct = products[0]
             let payment = SKPayment(product: removeAdsProduct)
             SKPaymentQueue.default().add(self)
             SKPaymentQueue.default().add(payment)
+        } else {
+            onComplete(false)
         }
-        
     }
     
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
@@ -45,21 +50,26 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransaction
         }
     }
     
-    func products func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transation in transactions {
             switch transation.transactionState{
-            case.purchased:
+            case .purchased:
             SKPaymentQueue.default().finishTransaction(transation)
             if transation.payment.productIdentifier == IAP_REMOVE_ADS {
                 UserDefaults.standard.set(true, forKey: IAP_REMOVE_ADS)
+                transactionComplete?(true)
             }
                     break
-            case.failed:
+            case .failed:
                 SKPaymentQueue.default().finishTransaction(transation)
+                 transactionComplete?(false)
                     break
-            case.restored:
+            case .restored:
                 SKPaymentQueue.default().finishTransaction(transation)
-            default: break
+                 transactionComplete?(true)
+            default:
+                 transactionComplete?(false)
+                break
                 
             }
         }
