@@ -21,21 +21,28 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupAds()
         
+    }
+    func setupAds(){
         if UserDefaults.standard.bool(forKey: PurchaseManager.instance.IAP_REMOVE_ADS) {
-            
-        removeAdsBtn.removeFromSuperview()
-        bannerView.removeFromSuperView()
-            
+            removeAdsBtn.removeFromSuperview()
+            bannerView.removeFromSuperView()
         } else {
             bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
             bannerView.rootViewController = self
             bannerView.load(GADRequest())
-
         }
     }
     
-    //actions
+    @IBAction func restoreBtnPressed(_ sender: Any) {
+        
+        PurchaseManager.instance.restorePurchases { success in
+            if success {
+                setupAds()
+            }
+        }
+    }
     
     @IBAction func removeAdsPressed(_ sender: Any) {
     //show an activity spinner

@@ -41,6 +41,13 @@
                                             </label>
                                         </subviews>
                                     </stackView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jWG-k3-pCg">
+                                        <rect key="frame" x="329" y="15" width="31" height="27"/>
+                                        <state key="normal" image="restore"/>
+                                        <connections>
+                                            <action selector="restoreBtnPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="iOq-ca-tme"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -48,6 +55,8 @@
                                     <constraint firstAttribute="bottom" secondItem="ukZ-XL-neO" secondAttribute="bottom" id="3SP-Ya-xmN"/>
                                     <constraint firstAttribute="trailing" secondItem="ukZ-XL-neO" secondAttribute="trailing" id="cdO-ZM-h8n"/>
                                     <constraint firstAttribute="height" constant="150" id="gQI-gT-r1k"/>
+                                    <constraint firstAttribute="trailing" secondItem="jWG-k3-pCg" secondAttribute="trailing" constant="15" id="h8Y-qf-FO7"/>
+                                    <constraint firstItem="jWG-k3-pCg" firstAttribute="top" secondItem="ZUf-UO-onn" secondAttribute="top" constant="15" id="nB7-C2-Lar"/>
                                     <constraint firstItem="oNW-JG-nZS" firstAttribute="centerX" secondItem="ZUf-UO-onn" secondAttribute="centerX" id="vVA-nG-zH2"/>
                                     <constraint firstItem="ukZ-XL-neO" firstAttribute="leading" secondItem="ZUf-UO-onn" secondAttribute="leading" id="vgP-gI-cZB"/>
                                     <constraint firstItem="oNW-JG-nZS" firstAttribute="top" secondItem="ZUf-UO-onn" secondAttribute="top" constant="28" id="wRC-lu-zOI"/>
@@ -127,6 +136,7 @@
     </scenes>
     <resources>
         <image name="BGImage" width="475" height="300"/>
+        <image name="restore" width="31" height="27"/>
         <image name="videoThumbnail" width="375" height="250"/>
     </resources>
 </document>

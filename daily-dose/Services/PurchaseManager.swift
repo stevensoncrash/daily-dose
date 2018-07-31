@@ -43,6 +43,16 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransaction
         }
     }
     
+    func restorePurchasse(onComplete: @escaping CompletionHandler){
+        if SKPaymentQueue.canMakePayments() && products.count > 0 {
+            transactionComplete = onComplete
+            SKPaymentQueue.default().add(self)
+            SKPaymentQueue.default().restoreCompletedTransactions()
+        } else {
+            onComplete(false)
+        }
+    }
+    
     func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         if response.products.count > 0 {
             print(response.products.debugDescription)
@@ -66,7 +76,10 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate, SKPaymentTransaction
                     break
             case .restored:
                 SKPaymentQueue.default().finishTransaction(transation)
-                 transactionComplete?(true)
+                if transation.payment.productIdentifier == IAP_REMOVE_ADS {
+                     UserDefaults.standard.set(true, forKey: IAP_REMOVE_ADS)
+                }
+                transactionComplete?(true)
             default:
                  transactionComplete?(false)
                 break
